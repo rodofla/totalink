@@ -1,0 +1,21 @@
+{
+    "compilerOptions": {
+      "outDir": "./dist",             // Directorio de salida para los archivos compilados
+      "rootDir": "./src",             // Directorio raíz de los archivos fuente
+      "lib": ["ESNext"],              // Librerías a incluir (puedes ajustar según las necesidades)
+      "target": "ESNext",             // Versión de ECMAScript a la que transpilar
+      "moduleResolution": "NodeNext", // Mecanismo de resolución de módulos para Node.js
+      "module": "NodeNext",           // Sistema de módulos a utilizar
+      "strict": false,                // Puedes activarlo a true para mayor rigor en la tipificación
+      "sourceMap": true,              // Genera archivos source map para facilitar la depuración
+      "esModuleInterop": true,        // Habilita la interoperabilidad con módulos CommonJS
+      "declaration": true,            // Genera archivos .d.ts para la distribución de tipos
+      "baseUrl": "./",                // Base para resolver módulos
+      "paths": {
+        "@/*": ["src/*"]             // Alias para acceder a archivos dentro de src
+      }
+    },
+    "include": ["src/**/*.ts", "src/**/*.d.ts"],  // Incluye tanto archivos .ts como .d.ts
+    "exclude": ["dist", "node_modules"]           // Excluye directorios que no deseas compilar
+  }
+  

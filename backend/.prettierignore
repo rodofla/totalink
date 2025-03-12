@@ -1,0 +1,14 @@
+# Dependencias
+node_modules/
+
+# Archivos compilados por TypeScript
+dist/
+
+# Resultados de cobertura de pruebas
+coverage/
+
+# Archivos de logs
+*.log
+
+# Archivos temporales o de caché
+tmp/
