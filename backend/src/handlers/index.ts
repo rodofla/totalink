@@ -1,7 +1,8 @@
 import type { Request, Response } from 'express'
 import slug from 'slug';
 import User from '@/models/User';
-import { hashPassword } from '@/utils/auth';
+import { checkPassword, hashPassword } from '@/utils/auth';
+import { generateJWT } from '@/utils/jwt';
 
 export const createAccount = async (req: Request, res: Response) => {
     const { email, password } = req.body
@@ -48,4 +49,8 @@ export const login = async (req: Request, res: Response) => {
     const token = generateJWT({ id: user._id })
 
     res.send(token)
+}
+
+export const getUser = async (req: Request, res: Response) => {
+    res.json(req.user)
 }
