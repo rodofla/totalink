@@ -5,6 +5,7 @@ import { LoginFormData } from "../types";
 import { api } from "../config/axios";
 import { isAxiosError } from "axios";
 import { toast } from "sonner";
+
 export default function LoginView() {
 
     const initialValues: LoginFormData = {

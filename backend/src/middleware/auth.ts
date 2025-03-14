@@ -36,6 +36,7 @@ export const authenticate = async (req: Request, res: Response, next: NextFuncti
             req.user = user
             next()
         }
+    // eslint-disable-next-line @typescript-eslint/no-unused-vars
     } catch (error) {
         res.status(500).json({ error: 'Token no Válido' })
     }
