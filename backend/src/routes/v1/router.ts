@@ -1,4 +1,4 @@
-import { createAccount, login, getUser, updateProfile } from '@/handlers';
+import { createAccount, login, getUser, updateProfile, uploadImage } from '@/handlers';
 import { Router } from 'express';
 import { body } from 'express-validator';
 import { handleInputErrors } from '@/middleware/validation';
@@ -13,7 +13,7 @@ ROUTER.post('/auth/register',
     body('email').isEmail().withMessage('E-mail no válido'),
     body('password').isLength({ min: 8 }).withMessage('El Password es muy corto, mínimo 8 caracteres'),
     handleInputErrors,
-    createAccount);
+    createAccount)
 
 ROUTER.post('/auth/login',
     body('email')
@@ -32,7 +32,8 @@ ROUTER.patch('/user',
     body('handle').notEmpty().withMessage('El handle no puede ir vacio'),
     body('description').notEmpty().withMessage('La Descripción no puede ir vacia'),
     handleInputErrors,
-    authenticate, 
+    authenticate,
     updateProfile)
+ROUTER.post('/user/image', authenticate, uploadImage)
 
 export default ROUTER;
