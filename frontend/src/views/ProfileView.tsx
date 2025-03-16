@@ -35,14 +35,14 @@ export default function ProfileView() {
             toast.error(error.message)
         },
         onSuccess: (data) => {
-            queryClient.setQueryData(['user'], (prevData : User) => {
+            queryClient.setQueryData(['user'], (prevData: User) => {
                 return {
                     ...prevData,
                     image: data
                 }
             })
         }
-        
+
     })
     /**End Mutations */
 
@@ -55,7 +55,10 @@ export default function ProfileView() {
     }
 
     const handleUserProfileForm = (formData: ProfileForm) => {
-        updateProfileMutation.mutate(formData)
+        const user: User = queryClient.getQueryData(['user'])!
+        user.description = formData.description
+        user.handle = formData.handle
+        updateProfileMutation.mutate(user)
     }
 
     /** end Handles */

@@ -5,6 +5,7 @@ export type User = {
     handle: string
     description: string
     image: string
+    links: string
 }
 
 export type RegisterFormData = Pick<User, 'name' | 'email' | 'handle'> & {
@@ -17,3 +18,12 @@ export type LoginFormData = Pick<User, 'email'> & {
 }
 
 export type ProfileForm = Pick<User, 'handle' | 'description'>
+
+export type SocialNetwork = {
+    id: number
+    name: string
+    url: string
+    enabled: boolean
+}
+
+export type totaLinkSocial = Pick<SocialNetwork, 'name' | 'url' | 'enabled'>
