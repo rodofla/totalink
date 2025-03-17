@@ -47,75 +47,85 @@ export default function TotaLinkView() {
 
     }
 
-    const links : SocialNetwork[] = JSON.parse(user.links)
-
+    const links: SocialNetwork[] = JSON.parse(user.links)
     const handleEnableSocial = (socialNetwork: string) => {
-        const updatedSocials = totaLinkSocials.map(social => {
-            if (social.name === socialNetwork) {
-                if (isValidUrl(social.url)) {
-                    return { ...social, enabled: !social.enabled }
+        // Se recorre el arreglo de redes sociales totales para encontrar la red indicada
+        // y alternar su estado "enabled" (activado/desactivado) si la URL es válida.
+        const updatedLinks = totaLinkSocials.map((item) => {
+            // Si el nombre del item coincide con la red social a modificar
+            if (item.name === socialNetwork) {
+                // Verifica que la URL sea válida
+                if (isValidUrl(item.url)) {
+                    // Si es válida, invierte el estado "enabled" (true pasa a false y viceversa)
+                    return { ...item, enabled: !item.enabled };
                 } else {
-                    toast.error('URL no válida')
+                    // Si la URL no es válida, muestra un mensaje de error y no cambia el estado
+                    toast.error('URL is not valid.');
+                    return item;
                 }
-
             }
-            return social
-        })
-        setTotaLinkSocials(updatedSocials)
-        let updatedItems: SocialNetwork[] = []
-        const selectedSocialNetwork = updatedSocials.find(social => social.name === socialNetwork)
+            // Para el resto de items que no coinciden, se devuelven sin cambios
+            return item;
+        });
+
+        let updatedItems: SocialNetwork[] = [];
+        // Se busca el item actualizado correspondiente a la red social modificada
+        const selectedSocialNetwork = updatedLinks.find((link) => link.name === socialNetwork);
 
         if (selectedSocialNetwork?.enabled) {
-            const id = links.filter(link => link.id).length + 1
-            if (links.some(link => link.name === socialNetwork)){
-                updatedItems = links.map(link => {
-                    if(link.name === socialNetwork){
-                        return {
-                            ...link,
-                            enabled: true,
-                            id: id
-                        }
+            // Si la red social está habilitada después de la actualización
 
-                    }else{
-                        return link
-                    }
-                })
-            }else {
+            // Se asigna un nuevo ID basado en la cantidad de links que están habilitados
+            const id = links.filter((link) => link.enabled).length + 1;
+
+            if (links.some((link) => link.name === socialNetwork)) {
+                // Si el link ya existe en el usuario, se actualiza su estado a habilitado y se asigna el nuevo ID
+                updatedItems = links.map((link) =>
+                    link.name === socialNetwork
+                        ? { ...link, enabled: true, id }
+                        : link
+                );
+            } else {
+                // Si el link no existe, se crea un nuevo item combinando la información del link actualizado
+                // y se le asigna el nuevo ID, luego se agrega al arreglo de links del usuario
                 const newItem = {
                     ...selectedSocialNetwork,
-                    id: id
-                }
-                updatedItems = [...links, newItem]
+                    id,
+                };
+                updatedItems = [...links, newItem];
             }
+        } else {
+            // Si la red social se está deshabilitando
 
-        }else{
-            const indexToUpdate = links.findIndex(link => link.name !== socialNetwork)
-            updatedItems = links.map(link =>{
-                if(link.name === socialNetwork){
-                    return {
-                        ...link,
-                        id: 0, 
-                        enabled: false
-                    }
-                }else if(link.id > indexToUpdate && (indexToUpdate !== 0 && link.id === 1)){
-                    return {
-                        ...link,
-                        id: link.id - 1
-                    }
-                }else{
-                    return link
+            // Se encuentra el índice del link a deshabilitar en el arreglo original
+            const indexToDisable = links.findIndex((link) => link.name === socialNetwork);
+
+            // Se recorre el arreglo de links para:
+            updatedItems = links.map((link) => {
+                if (link.name === socialNetwork) {
+                    // Marcar el link como deshabilitado y reiniciar su ID a 0
+                    return { ...link, id: 0, enabled: false };
+                } else if (link.id > links[indexToDisable].id) {
+                    // Para los links que vienen después del deshabilitado, se ajusta su ID decrementándolo en 1
+                    return { ...link, id: link.id - 1 }; // Ajustar índices
+                } else {
+                    // Los links anteriores se mantienen sin cambios
+                    return link;
                 }
-            })
+            });
         }
 
-        //almacenar en BBDD
+        // Se actualiza el estado general de las redes sociales con los cambios realizados
+        setTotaLinkSocials(updatedLinks);
+
+        // Se actualiza la caché del usuario (por ejemplo, en React Query) con los nuevos links serializados a JSON
         queryClient.setQueryData(['user'], (prevData: User) => {
             return {
                 ...prevData,
-                links: JSON.stringify(updatedItems)
-            }
-        })
-    }
+                links: JSON.stringify(updatedItems),
+            };
+        });
+    };
 
     return (
         <>
